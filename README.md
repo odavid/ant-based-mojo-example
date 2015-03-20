@@ -23,29 +23,55 @@ src/main/scripts/${plugin-name}.build.xml     (ant build script)
 src/main/scripts/${plugin-name}.mojo-desc.xml (simple mojo descriptor)
 ```
 
+## The pom.xml file
+
+The Ant Based Plugin must have few dependencies and few plugins defined in order to work.
+I've created an [example parent pom](../../blob/master/ant-mojos-parent/pom.xml) and a [child maven-plugin](../../blob/master/helloworld-maven-plugin/pom.xml) that contains the minimal settings that are needed in order to create Ant based Maven Plugins
+
+## The ${plugin-name}.mojo-desc.xml file
+
+Any Maven plugin is composed of Mojos. Each Mojo implements a single goal and gets its own configuration parameters.
+Each parameter has a name, default value and an expression that is bounded to a property to allow configuration of the mojo parameter from the command line by referencing a system property that the user sets.
+
+A mojo definition can also inherit from an abstract mojo definition, which allow several mojos to share the same parameters.
+
+An example for the mojo descriptor file can be found in [here](../../blob/master/helloworld-maven-plugin/src/main/scripts/helloworld.mojo-desc.xml)
+
+## The ${plugin-name}.build.xml file
+
+This file is actually a pure Ant build script. Each mojo should have a corresponding Ant target with the same name.
+There is a boilerplate code that needs to be set in order to get connectivity with Maven properties and API
+
+```
+<project>
+	<!-- *************************************************************************** -->
+	<!-- Boilerplate - Add this to any Ant based Plugin -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+	<taskdef resource="org/apache/maven/ant/tasks/antlib.xml"/>
+	<mavenclasspath/>
+	<importmavenprojectproperties/>	
+	<!-- *************************************************************************** -->
+
+	<!-- Mojo Target - target name equals to the mojo name, all mojo parameters are exposed as ant properties -->
+	<target name="hello-world">
+		<echo>The following is a basic ant based mojo, it takes to parameters and prints them to the screen...</echo>
+		<echo>${message} ${name}</echo>
+	</target>
+</project>
+```
+
+An example for the mojo build.xml file can be found in [here](../../blob/master/helloworld-maven-plugin/src/main/scripts/helloworld.build.xml)
+
 
 ## List of Maven Ant tasks
 
 The following are useful ant tasks that let a plugin developer to exploit "Maven echosystem" within the context of Ant project.
 In order to use these tasks, the plugin developer need to add the following taskdef within the build code
 
-```
-<project>
-	<!-- antcontrib -->
-	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
-	<!-- adding ant maven tasks to enable integration with maven -->
-	<taskdef resource="org/apache/maven/ant/tasks/antlib.xml"/>
-
-	<!-- Exposing Maven properties to ant project -->
-	<mavenclasspath/>
-	<importmavenprojectproperties/>	
-	...
-</project>
-```
 
 ##### mavenclasspath
 
-The mavenclasspath task exposes maven dependencies as path properties. 
+The mavenclasspath task exposes maven dependencies as path properties. This task is part of the boilerplate code
 
 * ${compile_classpath} - all compile dependencies
 * ${plugin_classpath} - all plugin dependencies
@@ -54,6 +80,42 @@ The mavenclasspath task exposes maven dependencies as path properties.
 
 ##### importmavenprojectproperties
 
-By using this task, all maven project.* properties are available within the Ant build context:
-${project.basedir}, ${project.build.directory} ${project.build.finalName}, etc...
+By using this task, all maven project.* properties are available within the Ant build context such as ${project.basedir}, ${project.build.directory} ${project.build.finalName}, etc...
+This task is part of the boilerplate code
 
+##### attachartifact
+
+Attaching a file as additional artifact to the project running the plugin
+
+```
+<attachartifact file="" type="" classifier=""/>
+```
+
+##### export-pom-property
+
+Exports a property to Maven context, so it can be used by other plugin configuration
+
+```
+<export-pom-property property="<the-name-of-the-property>" value="<value-from-ant>" overwrite="true|false (default=false)"/>
+```
+
+##### execute-maven-plugin
+
+Sometimes you want to execute a goal of other plugin within your plugin, so the operation of the plugin will be atomic.
+
+For example
+```
+<target name="my-mojo">
+	...
+	...
+	<echo>Copying some dependencies to ${project.build.directory}/alternateLocation</echo>
+	<execute-maven-plugin artifactId="maven-dependency-plugin" groupId="org.apache.maven.plugins" version="2.10" goal="copy-dependencies">
+		<configuration>
+			<includeGroupIds>${project.groupId}</includeGroupIds>
+			<outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>
+		</configuration>
+	</execute-maven-plugin>
+	...
+
+</target>
+```
