@@ -1,5 +1,17 @@
+
 <project>
+	<!-- *************************************************************************** -->
+	<!-- Boilerplate - Add this to any Ant based Plugin -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+	<taskdef resource="org/apache/maven/ant/tasks/antlib.xml"/>
+	<mavenclasspath/>
+	<importmavenprojectproperties/>	
+	<!-- *************************************************************************** -->
+
+	<!-- Mojo Target - target name equals to the mojo name, all mojo parameters are exposed as ant properties -->
 	<target name="hello-world">
+		<echo>The following is a basic ant based mojo, it takes to parameters and prints them to the screen...</echo>
 		<echo>${message} ${name}</echo>
 	</target>
+
 </project>
