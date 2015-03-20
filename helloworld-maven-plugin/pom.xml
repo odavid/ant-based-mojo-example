@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.github.odavid.maven.plugins.examples</groupId>
+		<artifactId>ant-mojos-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../ant-mojos-parent</relativePath>
+	</parent>
+	<groupId>com.github.odavid.maven.plugins.examples</groupId>
+	<artifactId>helloworld-maven-plugin</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>maven-plugin</packaging>
+	<name>${project.groupId}:${project.artifactId}</name>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.odavid.maven.plugins</groupId>
+				<artifactId>mojo-descriptor-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-plugin-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.odavid.maven.plugins.examples</groupId>
+	<artifactId>ant-mojos-parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>A parent for all maven plugins based on ant</description>
+	<properties>
+		<version.maven-plugin-tools>3.3</version.maven-plugin-tools>
+		<version.com.github.odavid.maven.plugins>0.1-alpha-32</version.com.github.odavid.maven.plugins>
+	</properties>
+	<dependencyManagement>
+		<!-- Defines all required dependency versions that should be used -->
+		<dependencies>
+			<dependency>
+				<groupId>com.github.odavid.maven.plugins</groupId>
+				<artifactId>ant-mojos-parent</artifactId>
+				<version>${version.com.github.odavid.maven.plugins}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<!-- Defines all required dependencies -->
+		<dependency>
+			<groupId>com.github.odavid.maven.plugins</groupId>
+			<artifactId>ant-mojos-parent</artifactId>
+			<version>${version.com.github.odavid.maven.plugins}</version>
+			<type>pom</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.github.odavid.maven.plugins</groupId>
+					<artifactId>mojo-descriptor-maven-plugin</artifactId>
+					<version>${version.com.github.odavid.maven.plugins}</version>
+					<executions>
+						<!-- Generates a mojo descriptor based on the src/main/scripts/<plugin-name>.mojo-desc.xml -->
+						<execution>
+							<id>generate-mojo-descriptors</id>
+							<goals>
+								<goal>mojo-descriptor</goal>
+								<goal>clean-generated</goal>
+							</goals>
+						</execution>
+						<!--  A simple hack to implant Thread Safe property to the mojo in order to discard the annoying warning: Your build is requesting parallel execution, but project... -->
+						<execution>
+							<id>implant-thread-safe</id>
+							<goals>
+								<goal>implant-thread-safe</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Basic mojo definition required for creating a maven plugin and help mojo -->
+				<plugin>
+					<artifactId>maven-plugin-plugin</artifactId>
+					<version>${maven-plugin-tools.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.plugin-tools</groupId>
+							<artifactId>maven-plugin-tools-ant</artifactId>
+							<version>${maven-plugin-tools.version}</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+					</configuration>
+					<executions>
+						<execution>
+							<id>mojo-descriptor</id>
+							<goals>
+								<goal>descriptor</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>help-goal</id>
+							<goals>
+								<goal>helpmojo</goal>
+							</goals>
+							<configuration>
+								<helpPackageName>${project.groupId}</helpPackageName>
+							</configuration>
+						</execution>
+					</executions>					
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

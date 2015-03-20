@@ -1,0 +1,15 @@
+<mojos>
+	<!-- This is an absract mojo that can be inherited by other mojos by use base attribute -->
+	<mojo name="base-hello-world-mojo" abstract="true">
+		<parameter name="message" defaultValue="Hello" expression="${hello.message}" description="Message to be printed"/>
+	</mojo>
+
+	<!-- This is a simple mojo that inherits the base-hello-world-mojo and adds additional parameter
+		The helloworld.build.xml should have a target with the mojo name 
+		The description will be used by the help mojo to generate help and documentation for this mojo
+	 -->
+	<mojo name="hello-world" base="base-hello-world-mojo" phase="initialize" description="Basic Mojo that prints greeting message to the current user">
+		<parameter name="name" defaultValue="${user.name}" description="The name of the user to be greeted"/>
+	</mojo>
+
+</mojos>

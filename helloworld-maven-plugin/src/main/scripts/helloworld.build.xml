@@ -1,0 +1,5 @@
+<project>
+	<target name="hello-world">
+		<echo>${message} ${name}</echo>
+	</target>
+</project>
