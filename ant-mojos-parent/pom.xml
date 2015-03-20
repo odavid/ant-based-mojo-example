@@ -61,12 +61,12 @@
 				<!-- Basic mojo definition required for creating a maven plugin and help mojo -->
 				<plugin>
 					<artifactId>maven-plugin-plugin</artifactId>
-					<version>${maven-plugin-tools.version}</version>
+					<version>${version.maven-plugin-tools}</version>
 					<dependencies>
 						<dependency>
 							<groupId>org.apache.maven.plugin-tools</groupId>
 							<artifactId>maven-plugin-tools-ant</artifactId>
-							<version>${maven-plugin-tools.version}</version>
+							<version>${version.maven-plugin-tools}</version>
 						</dependency>
 					</dependencies>
 					<configuration>
