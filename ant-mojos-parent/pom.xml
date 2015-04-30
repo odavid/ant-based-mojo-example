@@ -8,7 +8,7 @@
 	<description>A parent for all maven plugins based on ant</description>
 	<properties>
 		<version.maven-plugin-tools>3.3</version.maven-plugin-tools>
-		<version.com.github.odavid.maven.plugins>0.1-alpha-32</version.com.github.odavid.maven.plugins>
+		<version.com.github.odavid.maven.plugins>0.1-alpha-36</version.com.github.odavid.maven.plugins>
 	</properties>
 	<dependencyManagement>
 		<!-- Defines all required dependency versions that should be used -->

@@ -8,5 +8,6 @@
 	<modules>
 		<module>ant-mojos-parent</module>
 		<module>helloworld-maven-plugin</module>
+		<module>usage-example</module>
 	</modules>
 </project>
